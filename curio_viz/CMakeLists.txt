@@ -1,12 +1,10 @@
-cmake_minimum_required(VERSION 2.8.3)
+cmake_minimum_required(VERSION 3.8)
 project(curio_viz)
-find_package(catkin REQUIRED COMPONENTS roslaunch)
-
-catkin_package()
-
-roslaunch_add_file_check(launch)
+find_package(ament_cmake REQUIRED)
 
 install(
   DIRECTORY launch rviz
-  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
+  DESTINATION share/${PROJECT_NAME}
 )
+
+ament_package()

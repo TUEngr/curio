@@ -1,11 +1,12 @@
 <?xml version="1.0" ?>
-<sdf version="1.5">
+<sdf version="1.7">
   <world name="default">
+
+
+
     <include>
-      <uri>model://ground_plane</uri>
-    </include>
-    <include>
-      <uri>model://sun</uri>
+        <uri>https://fuel.ignitionrobotics.org/1.0/OpenRobotics/models/Ground Plane</uri>
+        <uri>https://fuel.ignitionrobotics.org/1.0/OpenRobotics/models/Sun</uri>
     </include>
     <model name="box">
       <pose>5 0 0.5 0 0 0</pose>
@@ -24,7 +25,10 @@
             </box>
           </geometry>
           <material>
-            <script>Gazebo/WoodPallet</script>
+              <ambient>1 0 0 1</ambient>
+              <diffuse>1 0 0 1</diffuse>
+              <specular>0.1 0.1 0.1 1</specular>
+              <shininess>50.0</shininess>
           </material>
         </visual>
       </link>
@@ -46,7 +50,10 @@
             </sphere>
           </geometry>
           <material>
-            <script>Gazebo/WoodPallet</script>
+              <ambient>1 0 0 1</ambient>
+              <diffuse>1 0 0 1</diffuse>
+              <specular>0.1 0.1 0.1 1</specular>
+              <shininess>50.0</shininess>
           </material>
         </visual>
       </link>
@@ -70,7 +77,10 @@
             </cylinder>
           </geometry>
           <material>
-            <script>Gazebo/WoodPallet</script>
+              <ambient>1 0 0 1</ambient>
+              <diffuse>1 0 0 1</diffuse>
+              <specular>0.1 0.1 0.1 1</specular>
+              <shininess>50.0</shininess>
           </material>
         </visual>
       </link>
@@ -92,7 +102,10 @@
             </box>
           </geometry>
           <material>
-            <script>Gazebo/WoodPallet</script>
+              <ambient>1 0 0 1</ambient>
+              <diffuse>1 0 0 1</diffuse>
+              <specular>0.1 0.1 0.1 1</specular>
+              <shininess>50.0</shininess>
           </material>
         </visual>
       </link>
