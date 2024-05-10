@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 import os
 from ament_index_python.packages import get_package_share_directory
 
@@ -13,8 +14,16 @@ from launch_ros.parameter_descriptions import ParameterValue
 def generate_launch_description():
     # Create the launch configuration variables
     use_sim_time = LaunchConfiguration('use_sim_time')
-    urdf = os.path.join(get_package_share_directory(
-        'curio_description'), 'urdf', 'curio.urdf')
+    urdf = os.path.join(get_package_share_directory('curio_description'), 'urdf', 'curio.urdf')
+    pkg_share_dir = get_package_share_directory('curio_description')
+    models_path = pkg_share_dir + "/meshes/bases:" + pkg_share_dir + "/meshes/sensors:" + pkg_share_dir + "/meshes/wheels"
+    pkg_share_dir = get_package_share_directory('curio_gazebo')
+    worlds_path = pkg_share_dir + "/worlds"
+    
+    os.environ['GZ_SIM_RESOURCE_PATH'] = models_path + ":" + worlds_path
+
+    print(os.environ['GZ_SIM_RESOURCE_PATH'])
+
     world = LaunchConfiguration('world')
 
     robot_desc = ParameterValue(Command(['xacro ', urdf]),

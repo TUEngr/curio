@@ -1,4 +1,0 @@
-- git:
-    uri: https://github.com/srmainwaring/curio_msgs.git
-    local-name: curio_msgs
-    version: master

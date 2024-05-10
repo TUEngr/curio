@@ -44,7 +44,7 @@
             <visual>
                 <origin rpy="0 0 0" xyz="0 0 0" />
                 <geometry>
-                    <mesh filename="package://curio_description/meshes/sensors/rplidar_a1_assembly_low.stl" />
+                    <mesh filename="file://$(find curio_description)/meshes/sensors/rplidar_a1_assembly_low.stl" />
                 </geometry>
                 <material name="white" />
             </visual>

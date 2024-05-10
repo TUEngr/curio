@@ -1,3 +1,6 @@
+#!/usr/bin/env python3
+import os
+
 from ament_index_python.packages import get_package_share_path
 
 from launch import LaunchDescription
@@ -9,8 +12,14 @@ from launch_ros.parameter_descriptions import ParameterValue
 
 def generate_launch_description():
     rover_path = get_package_share_path('curio_description')
-    default_model_path = rover_path / 'urdf/curio.urdf.xacro'
+    #rover_dir = str(rover_path)
+    default_model_path = rover_path / 'urdf/curio.urdf'
     default_rviz_config_path = rover_path / 'rviz/urdf.rviz'
+    #mesh_base_dir  = rover_dir  + "meshes/bases"
+    #mesh_sensors_dir  = rover_dir  + "meshes/sensors"
+    #mesh_wheels_dir  = rover_dir  + "meshes/wheels"
+
+    # os.environ['GZ_SIM_RESOURCE_PATH'] = mesh_base_dir + ":" + mesh_sensors_dir
 
     model_arg = DeclareLaunchArgument(name='model', default_value=str(default_model_path),
                                       description='Absolute path to robot urdf file')
@@ -28,7 +37,7 @@ def generate_launch_description():
 
     # Depending on gui parameter, either launch joint_state_publisher or joint_state_publisher_gui
     joint_state_publisher_node = Node(
-        package='joint_state_publisher',
+        package='joint_state_publisher_gui',
         executable='joint_state_publisher_gui'
     )
 

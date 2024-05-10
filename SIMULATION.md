@@ -1,20 +1,15 @@
 In order to start up the simulation:
 ```
-roslaunch mybot_gazebo mybot_world.launch
-roslaunch roslaunch curio_viz view_model.launch
-```
+ros2 launch curio_description curio_gazebo.launch.py 
+ros2 launch curio_gazebo curio_gazebo.launch.py 
 
+```
 Send a base controller command and ensure that the robot moves in both Gazebo and rviz:
 ```
-rostopic pub /cmd_vel geometry_msgs/Twist "linear:
-  x: 0.2
-  y: 0.0
-  z: 0.0
-angular:
-  x: 0.0
-  y: 0.0
-  z: 0.1"
+ros2 topic pub /model/vehicle_blue/cmd_vel geometry_msgs/Twist "linear: { x: 0.1 }"
 ```
+
+TODO - update rest to ROS2
 
 To make a map:
 Terminal A: 
