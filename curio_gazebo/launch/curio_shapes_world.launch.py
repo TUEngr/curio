@@ -22,7 +22,7 @@ def generate_launch_description():
     
     os.environ['GZ_SIM_RESOURCE_PATH'] = models_path + ":" + worlds_path
 
-    print(os.environ['GZ_SIM_RESOURCE_PATH'])
+    #print(os.environ['GZ_SIM_RESOURCE_PATH'])
 
     world = LaunchConfiguration('world')
 

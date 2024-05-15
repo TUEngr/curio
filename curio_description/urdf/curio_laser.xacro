@@ -63,7 +63,7 @@
 
             <sensor type="gpu_lidar" name="laser_sensor">
                 <always_on>true</always_on>
-                <update_rate>5</update_rate>
+                <update_rate>10</update_rate>
                 <visualize>true</visualize>
                 <topic>sensors/laser</topic>
                 <pose>0 0 0.045 0 0 0</pose>
@@ -94,10 +94,12 @@
                         <stddev>0.01</stddev>
                     </noise>
                 </lidar>
+            </sensor>
+        </gazebo>
+        <gazebo>
                 <plugin filename="libignition-gazebo-sensors-system.so" name="ignition::gazebo::systems::Sensors">
                     <render_engine>ogre2</render_engine>
                 </plugin>
-            </sensor>
         </gazebo>
     </xacro:macro>
 
@@ -108,8 +110,11 @@
             <child link="laser" />
         </joint>
 
+<!--
         <gazebo reference="laser_joint">
             <preserveFixedJoint>true</preserveFixedJoint>
         </gazebo>
+        -->
     </xacro:macro>
+
 </robot>

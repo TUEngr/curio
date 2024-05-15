@@ -42,7 +42,8 @@
     <!-- Include macros for materials, inertials, sensors -->
     <xacro:include filename="$(find curio_description)/urdf/curio_materials.xacro"/>
     <xacro:include filename="$(find curio_description)/urdf/curio_inertials.xacro"/>
-    <xacro:include filename="$(find curio_description)/urdf/curio_laser.xacro"/>
+    <!-- <xacro:include filename="$(find curio_description)/urdf/curio_laser.xacro"/> -->
+    <xacro:include filename="$(find curio_description)/urdf/rplidar_s2.urdf" />
 
     <!-- Gazebo plugins -->
     <gazebo>
@@ -57,6 +58,33 @@
                 front_left_corner_joint, front_right_corner_joint,
                 back_left_corner_joint, back_right_corner_joint,
         -->
+        <plugin name="ignition::gazebo::systems::DiffDrive" filename="ignition-gazebo-diff-drive-system"> 
+            <num_wheel_pairs>2</num_wheel_pairs>
+            <!-- Wheel Information -->
+            <left_joint>front_left_wheel_joint</left_joint>
+            <left_joint>back_left_wheel_joint</left_joint>
+            <right_joint>front_right_wheel_joint</right_joint>
+            <right_joint>back_right_wheel_joint</right_joint>
+            <wheel_separation>0.47</wheel_separation>
+            <wheel_radius>0.06</wheel_radius>
+
+            <!-- Limits -->
+            <max_linear_acceleration>5</max_linear_acceleration>
+            <min_linear_acceleration>-5</min_linear_acceleration>
+            <max_angular_acceleration>4</max_angular_acceleration>
+            <min_angular_acceleration>-4</min_angular_acceleration>
+
+            
+            <!-- Output -->
+            <frame_id>odom</frame_id>
+            <child_frame_id>base_link</child_frame_id>
+
+            <!-- Topics -->
+            <topic>/cmd_vel</topic>
+            <odom_topic>/odometry/wheels</odom_topic>
+            <tf_topic>/tf_gazebo</tf_topic>
+
+        </plugin>
         <!--
         <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
             <robotNamespace>/</robotNamespace>
@@ -91,6 +119,9 @@
             <alwaysOn>true</alwaysOn>
         </plugin>
         -->
+        <plugin filename="ignition-gazebo-joint-state-publisher-system" name="ignition::gazebo::systems::JointStatePublisher">
+            <topic>/joint_states</topic>
+        </plugin>
     </gazebo>
 
     <!-- Chassis -->
@@ -352,7 +383,7 @@
     </xacro:macro>
 
     <!-- Fixed Rocker Joint (for testing)  -->
-    <!-- <xacro:macro name="rocker_joint" params="lat_label reflect">
+    <xacro:macro name="rocker_joint" params="lat_label reflect">
         <joint name="${lat_label}_rocker_joint" type="fixed">
             <origin rpy="0 0 0" xyz="0.071 ${reflect * 0.154} 0.0118"/>
             <parent link="base_link" />
@@ -363,7 +394,7 @@
             <disableFixedJointLumping>true</disableFixedJointLumping> 
             <preserveFixedJoint>true</preserveFixedJoint>
         </gazebo>
-    </xacro:macro> -->
+    </xacro:macro>
 
     <xacro:rocker_joint lat_label="left" reflect="1"/>
     <xacro:rocker_joint lat_label="right" reflect="-1"/>
@@ -527,7 +558,7 @@
         </gazebo>
     </xacro:macro>
     <!-- Fixed Bogie Joint  (for testing) -->
-    <!-- <xacro:macro name="bogie_joint" params="lat_label reflect">
+    <xacro:macro name="bogie_joint" params="lat_label reflect">
         <joint name="${lat_label}_bogie_joint" type="fixed">
             <origin rpy="0 0 0" xyz="-0.181 ${reflect * 0.0675} -0.062"/>
             <parent link="${lat_label}_rocker_link" />
@@ -538,7 +569,8 @@
             <disableFixedJointLumping>true</disableFixedJointLumping> 
             <preserveFixedJoint>true</preserveFixedJoint>
         </gazebo>
-    </xacro:macro> -->
+    </xacro:macro>
+
     <xacro:bogie_joint lat_label="left" reflect="1"/>
     <xacro:bogie_joint lat_label="right" reflect="-1"/>
 
@@ -604,9 +636,41 @@
     <xacro:corner_wheel_joint lon_label="back" lat_label="left" reflect="1"/>
     <xacro:corner_wheel_joint lon_label="back" lat_label="right" reflect="-1"/>
 
-    <!-- Laser Scan Sensor -->
+
+    <!-- Laser Scan Sensor  
     <xacro:laser_link />
-    <xacro:laser_joint x="0.152" y="0.078" z="0.050" />
+    <xacro:laser_joint x="0.152" y="0.078" z="0.150" /> 
+    -->
+
+    <gazebo reference="front_left_wheel_link">
+        <mu1 value="200.0" />
+        <mu2 value="200.0" />
+        <kp  value="1000000.0" />
+        <kd  value="1.0" />
+        <minDepth>0.005</minDepth>
+    </gazebo>
+    <gazebo reference="front_right_wheel_link">
+        <mu1 value="200.0" />
+        <mu2 value="200.0" />
+        <kp  value="1000000.0" />
+        <kd  value="1.0" />
+        <minDepth>0.005</minDepth>
+    </gazebo>
+    <gazebo reference="back_left_wheel_link">
+        <mu1 value="200.0" />
+        <mu2 value="200.0" />
+        <kp  value="1000000.0" />
+        <kd  value="1.0" />
+        <minDepth>0.005</minDepth>
+    </gazebo>
+    <gazebo reference="back_right_wheel_link">
+        <mu1 value="200.0" />
+        <mu2 value="200.0" />
+        <kp  value="1000000.0" />
+        <kd  value="1.0" />
+        <minDepth>0.005</minDepth>
+    </gazebo>
+
 
 
 </robot>

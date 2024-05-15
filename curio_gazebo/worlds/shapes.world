@@ -5,7 +5,10 @@
 
 
     <include>
+    <!--
         <uri>https://fuel.ignitionrobotics.org/1.0/OpenRobotics/models/Ground Plane</uri>
+        <uri>https://fuel.ignitionrobotics.org/1.0/OpenRobotics/models/Coke</uri>
+        -->
         <uri>https://fuel.ignitionrobotics.org/1.0/OpenRobotics/models/Sun</uri>
     </include>
     <model name="box">
