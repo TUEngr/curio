@@ -641,44 +641,26 @@
     <gazebo reference="front_left_wheel_link">
         <mu1 value="0.0" />
         <mu2 value="0.0" />
-        <kp  value="1000000.0" />
-        <kd  value="1.0" />
-        <minDepth>0.005</minDepth>
     </gazebo>
     <gazebo reference="front_right_wheel_link">
         <mu1 value="0.0" />
         <mu2 value="0.0" />
-        <kp  value="1000000.0" />
-        <kd  value="1.0" />
-        <minDepth>0.005</minDepth>
     </gazebo>
     <gazebo reference="back_left_wheel_link">
         <mu1 value="0.0" />
         <mu2 value="0.0" />
-        <kp  value="1000000.0" />
-        <kd  value="1.0" />
-        <minDepth>0.005</minDepth>
     </gazebo>
     <gazebo reference="back_right_wheel_link">
         <mu1 value="0.0" />
         <mu2 value="0.0" />
-        <kp  value="1000000.0" />
-        <kd  value="1.0" />
-        <minDepth>0.005</minDepth>
     </gazebo>
     <gazebo reference="mid_right_wheel_link">
-        <mu1 value="2.0" />
-        <mu2 value="2.0" />
-        <kp  value="1000000.0" />
-        <kd  value="1.0" />
-        <minDepth>0.005</minDepth>
+        <mu1 value="1.0" />
+        <mu2 value="1.0" />
     </gazebo>
     <gazebo reference="mid_left_wheel_link">
-        <mu1 value="2.0" />
-        <mu2 value="2.0" />
-        <kp  value="1000000.0" />
-        <kd  value="1.0" />
-        <minDepth>0.005</minDepth>
+        <mu1 value="1.0" />
+        <mu2 value="1.0" />
     </gazebo>
 
 
