@@ -60,12 +60,10 @@
 
         <!-- First Attempt - use DiffDrive for now -->
         <plugin name="ignition::gazebo::systems::DiffDrive" filename="ignition-gazebo-diff-drive-system"> 
-            <num_wheel_pairs>2</num_wheel_pairs>
+            <num_wheel_pairs>1</num_wheel_pairs>
             <!-- Wheel Information -->
-            <left_joint>front_left_wheel_joint</left_joint>
-            <left_joint>back_left_wheel_joint</left_joint>
-            <right_joint>front_right_wheel_joint</right_joint>
-            <right_joint>back_right_wheel_joint</right_joint>
+            <left_joint>mid_left_wheel_joint</left_joint>
+            <right_joint>mid_right_wheel_joint</right_joint>
             <wheel_separation>0.47</wheel_separation>
             <wheel_radius>0.06</wheel_radius>
 
@@ -556,18 +554,19 @@
         </gazebo>
     </xacro:macro>
     <!-- Fixed Bogie Joint  (for testing) -->
+    <!--
     <xacro:macro name="bogie_joint" params="lat_label reflect">
         <joint name="${lat_label}_bogie_joint" type="fixed">
             <origin rpy="0 0 0" xyz="-0.181 ${reflect * 0.0675} -0.062"/>
             <parent link="${lat_label}_rocker_link" />
             <child link="${lat_label}_bogie_link" />
         </joint>
-
         <gazebo reference="${lat_label}_bogie_joint">
             <disableFixedJointLumping>true</disableFixedJointLumping> 
             <preserveFixedJoint>true</preserveFixedJoint>
         </gazebo>
     </xacro:macro>
+    -->
 
     <xacro:bogie_joint lat_label="left" reflect="1"/>
     <xacro:bogie_joint lat_label="right" reflect="-1"/>
@@ -640,29 +639,43 @@
     <xacro:laser_joint x="0.174" y="0.0" z="0.10" />  
 
     <gazebo reference="front_left_wheel_link">
-        <mu1 value="200.0" />
-        <mu2 value="200.0" />
+        <mu1 value="0.0" />
+        <mu2 value="0.0" />
         <kp  value="1000000.0" />
         <kd  value="1.0" />
         <minDepth>0.005</minDepth>
     </gazebo>
     <gazebo reference="front_right_wheel_link">
-        <mu1 value="200.0" />
-        <mu2 value="200.0" />
+        <mu1 value="0.0" />
+        <mu2 value="0.0" />
         <kp  value="1000000.0" />
         <kd  value="1.0" />
         <minDepth>0.005</minDepth>
     </gazebo>
     <gazebo reference="back_left_wheel_link">
-        <mu1 value="200.0" />
-        <mu2 value="200.0" />
+        <mu1 value="0.0" />
+        <mu2 value="0.0" />
         <kp  value="1000000.0" />
         <kd  value="1.0" />
         <minDepth>0.005</minDepth>
     </gazebo>
     <gazebo reference="back_right_wheel_link">
-        <mu1 value="200.0" />
-        <mu2 value="200.0" />
+        <mu1 value="0.0" />
+        <mu2 value="0.0" />
+        <kp  value="1000000.0" />
+        <kd  value="1.0" />
+        <minDepth>0.005</minDepth>
+    </gazebo>
+    <gazebo reference="mid_right_wheel_link">
+        <mu1 value="2.0" />
+        <mu2 value="2.0" />
+        <kp  value="1000000.0" />
+        <kd  value="1.0" />
+        <minDepth>0.005</minDepth>
+    </gazebo>
+    <gazebo reference="mid_left_wheel_link">
+        <mu1 value="2.0" />
+        <mu2 value="2.0" />
         <kp  value="1000000.0" />
         <kd  value="1.0" />
         <minDepth>0.005</minDepth>
