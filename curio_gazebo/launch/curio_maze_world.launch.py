@@ -3,51 +3,56 @@ import os
 from ament_index_python.packages import get_package_share_directory
 
 from launch import LaunchDescription
-from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription
+from launch.actions import ExecuteProcess, DeclareLaunchArgument, IncludeLaunchDescription, RegisterEventHandler
 from launch.launch_description_sources import PythonLaunchDescriptionSource
+from launch.event_handlers import OnProcessExit
 from launch.substitutions import Command, LaunchConfiguration, PathJoinSubstitution
 from launch_ros.actions import Node
 from launch_ros.parameter_descriptions import ParameterValue
+from launch.actions import AppendEnvironmentVariable
+import xacro
 
 
 
 def generate_launch_description():
-    # Create the launch configuration variables
-    use_sim_time = LaunchConfiguration('use_sim_time')
-    urdf = os.path.join(get_package_share_directory('curio_description'), 'urdf', 'curio.urdf')
-    pkg_share_dir = get_package_share_directory('curio_description')
-    models_path = pkg_share_dir + "/meshes/bases:" + pkg_share_dir + "/meshes/sensors:" + pkg_share_dir + "/meshes/wheels"
-    pkg_share_dir = get_package_share_directory('curio_gazebo')
-    worlds_path = pkg_share_dir + "/worlds"
-    
+    use_sim_time = LaunchConfiguration('use_sim_time', default=True)
+
+    # ensure that gazebo can find all assets
+    curio_desc_path = get_package_share_directory('curio_description')
+    curio_gazebo_path = get_package_share_directory('curio_gazebo')
+    models_path = curio_desc_path + "/meshes/bases:" + curio_desc_path + "/meshes/sensors:" + curio_desc_path + "/meshes/wheels"
+    worlds_path = curio_gazebo_path + "/worlds"
     os.environ['GZ_SIM_RESOURCE_PATH'] = models_path + ":" + worlds_path
 
-    #print(os.environ['GZ_SIM_RESOURCE_PATH'])
+    set_env_vars_resources = AppendEnvironmentVariable(
+        'GZ_SIM_RESOURCE_PATH',
+        os.path.join(curio_desc_path,'meshes/bases'),
+        os.path.join(curio_desc_path,'meshes/sensors'),
+        os.path.join(curio_desc_path,'meshes/wheels'),
+        os.path.join(curio_gazebo_path,'meshes/wheels')
+        )
 
-    world = LaunchConfiguration('world')
-
-    robot_desc = ParameterValue(Command(['xacro ', urdf]),
-                                       value_type=str)
-    
-    declare_use_sim_time_cmd = DeclareLaunchArgument(
-        'use_sim_time',
-        default_value='true',
-        description='Use simulation (Gazebo) clock if true')
+    urdf = os.path.join(curio_desc_path, 'urdf', 'curio.urdf')
+    doc = xacro.parse(open(urdf))
+    xacro.process_doc(doc)
+    params = {'robot_description': doc.toxml()}
+    # robot_desc = ParameterValue(Command(['xacro ', urdf]), value_type=str)
     
     declare_world_cmd = DeclareLaunchArgument(
         'world',
         default_value='maze.world',
         description='World file to use in Gazebo')
     
-    gz_world_arg = PathJoinSubstitution([
-        get_package_share_directory('curio_gazebo'), 'worlds', world])
+    world = LaunchConfiguration('world')
+    gz_world_arg = PathJoinSubstitution([curio_gazebo_path, 'worlds', world])
 
     # Include the gz sim launch file  
     gz_sim_share = get_package_share_directory("ros_gz_sim")
     gz_sim = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(os.path.join(gz_sim_share, "launch", "gz_sim.launch.py")),
         launch_arguments={
-            "gz_args" : gz_world_arg 
+            'gz_args' : gz_world_arg,
+            'on_exit_shutodown' : 'true'
         }.items()
     )
     
@@ -55,11 +60,13 @@ def generate_launch_description():
     gz_spawn_entity = Node(
         package="ros_gz_sim",
         executable="create",
+        output='screen',
         arguments=[
-            "-topic", "/robot_description",
+            "-string", doc.toxml(),
             "-name", "curio",
-            "-allow_renaming", "true",
+            "-topic", "/robot_description",
             "-z", "0.25",
+            "-allow_renaming", "true",
         ]
     )
     
@@ -79,7 +86,7 @@ def generate_launch_description():
     )
 
     # Robot state publisher
-    params = {'use_sim_time': use_sim_time, 'robot_description': robot_desc}
+    params = {'robot_description': doc.toxml()}
     start_robot_state_publisher_cmd = Node(
             package='robot_state_publisher',
             executable='robot_state_publisher',
@@ -88,20 +95,52 @@ def generate_launch_description():
             parameters=[params],
             arguments=[])
 
+    # Controllers
+
+    # joint_state_controller
+    load_joint_state_controller = ExecuteProcess(
+        cmd=['ros2', 'control', 'load_controller', '--set-state', 'active', 'joint_state_broadcaster'],
+        output='screen'
+    )
+
+    # wheel_velocity_controller
+    rover_wheel_controller = ExecuteProcess(
+        cmd=['ros2', 'control', 'load_controller', '--set-state', 'active', 'wheel_controller'],
+        output='screen'
+    )
+
+    # servo_controller
+    servo_controller = ExecuteProcess(
+        cmd=['ros2', 'control', 'load_controller', '--set-state', 'active', 'servo_controller'],
+        output='screen'
+    )
+
+
     # Create the launch description and populate
     ld = LaunchDescription()
 
     # Declare the launch options
-    ld.add_action(declare_use_sim_time_cmd)
+    ld.add_action(set_env_vars_resources)
     ld.add_action(declare_world_cmd)
 
-    # Launch Gazebo
-    ld.add_action(gz_sim)
-    ld.add_action(gz_spawn_entity)
+    ld.add_action(gz_sim) # Launch Gazebo
+    # ld.add_action(gz_spawn_entity)
     ld.add_action(gz_ros2_bridge)
 
 
     # Launch Robot State Publisher
     ld.add_action(start_robot_state_publisher_cmd)
+
+    ld.add_action(RegisterEventHandler(
+                event_handler=OnProcessExit(
+                target_action=gz_spawn_entity,
+                on_exit=[
+                    load_joint_state_controller,
+                    rover_wheel_controller,
+                    servo_controller,
+                ],
+               )
+            )
+        ])
 
     return ld

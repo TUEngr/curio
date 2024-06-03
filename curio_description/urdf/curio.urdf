@@ -58,6 +58,8 @@
                 back_left_corner_joint, back_right_corner_joint,
         -->
 
+        <!-- We are using ROS2-Humble, and Gazebo-Fortress, as recommended at http://gazebosim.org/docs/latest/ros_installation -->
+
         <!-- First Attempt - use DiffDrive for now -->
         <!--
         <plugin name="ignition::gazebo::systems::DiffDrive" filename="ignition-gazebo-diff-drive-system"> 
@@ -117,6 +119,15 @@
             <topic>/cmd_vel</topic> 
             <!-- <odom_topic>/odom</odom_topic> -->
         </plugin>
+
+        <!-- Third attempt - inspired by https://github.com/nasa-jpl/osr-rover-code
+            (actually https://github.com/nasa-jpl/osr-rover-code/pull/193) -->
+        <!-- with gazebo ignition ros2_control documentation from 
+            https://github.com/ros-controls/gz_ros2_control/blob/humble/doc/index.rst -->
+        <plugin name="ign_ros2_control::IgnitionROS2ControlPlugin" filename="ign_ros2_control-system">
+            <parameters>$(find curio_gazebo)/config/controller_velocity.yaml</parameters>
+        </plugin>
+
 
         <!-- Publish state of passive joints
 

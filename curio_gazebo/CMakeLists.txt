@@ -7,11 +7,11 @@ endif()
 
 # find dependencies
 find_package(ament_cmake REQUIRED)
-
 find_package(curio_description REQUIRED)
+find_package(control_msgs REQUIRED)
 
 install(
-  DIRECTORY launch worlds models
+  DIRECTORY launch worlds models config
   DESTINATION share/${PROJECT_NAME}
 )
 
