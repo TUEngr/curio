@@ -174,10 +174,11 @@
   </joint>
 
   <!-- traction wheel link -->
+  <!-- make rear wheel slightly larger to ensure pressure on front wheel -->
   <link name="wheel_rear_link">
     <visual>
       <geometry>
-        <cylinder length="0.08" radius="0.3" />
+        <cylinder length="0.08" radius="0.32" />
       </geometry>
       <material name="Black" />
     </visual>
@@ -188,7 +189,7 @@
     </inertial>
     <collision>
       <geometry>
-        <cylinder length="0.08" radius="0.3" />
+        <cylinder length="0.08" radius="0.32" />
       </geometry>
     </collision>
   </link>
