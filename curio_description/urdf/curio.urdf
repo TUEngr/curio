@@ -223,7 +223,7 @@
             <geometry>
                 <mesh filename="file://$(find curio_description)/meshes/bases/body_box.stl" />
             </geometry>
-            <material name="dark_gray" />
+            <material name="orange" />
         </visual>
         <collision>
             <origin rpy="0 0 0" xyz="0 0 0" />
@@ -252,7 +252,7 @@
                 <mesh filename="file://$(find curio_description)/meshes/bases/differential.stl" />
                 <!-- <box size="0.200 0.015 0.015"/> -->
             </geometry>
-            <material name="dark_gray" />
+            <material name="gray" />
         </visual>
         <collision>
             <origin rpy="0 0 ${math_pi_over_2}" xyz="0 0 0" />
@@ -297,7 +297,7 @@
                             <uri>file://$(find curio_description)/meshes/bases/turnbuckle.stl</uri>
                         </mesh>
                     </geometry>
-                    <material name="dark_gray" />
+                    <material name="gray" />
                 </visual>
                 <collision name="${lat_label}_turnbuckle_collision">
                     <pose>0 0 0 0 ${math_pi_over_2} 0</pose>
@@ -451,7 +451,7 @@
                 <geometry>
                     <mesh filename="file://$(find curio_description)/meshes/wheels/wheel_asm.stl" />
                 </geometry>
-                <material name="dark_gray" />
+                <material name="black" />
             </visual>
             <collision>
                 <origin rpy="${reflect * math_pi_over_2} 0 0" xyz="0 0 0" />

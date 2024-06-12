@@ -51,6 +51,14 @@ def generate_launch_description():
     )
     ld.add_action(node_robot_state_publisher)
 
+    # Controller to convert between /cmd_vel and /servo_controller/joint_trajectory and /wheel_controller/commands 
+    controller_spawn = Node(
+        package='curio_gazebo',
+        executable='curio_controller',
+        output='screen'
+    )
+    ld.add_action(controller_spawn)
+
     # joint_state_controller
     load_joint_state_controller = ExecuteProcess(
         cmd=['ros2', 'control', 'load_controller', '--set-state', 'active', 'joint_state_broadcaster'],
