@@ -1,13 +1,12 @@
-cmake_minimum_required(VERSION 2.8.3)
+cmake_minimum_required(VERSION 3.8)
 project(curio_navigation)
 
-find_package(catkin REQUIRED roslaunch)
-
-catkin_package()
-
-roslaunch_add_file_check(launch)
+find_package(ament_cmake REQUIRED) 
+# find_package(roslaunch REQUIRED) 
 
 install(
-    DIRECTORY config launch
-    DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
+    DIRECTORY launch config
+    DESTINATION share/${PROJECT_NAME}
 )
+
+ament_package()

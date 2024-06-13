@@ -1,0 +1,13 @@
+nav2_amcl:
+  ros__parameters:
+    transform_tolerance: 0.5
+    robot_model_type: "nav2_amcl::DifferentialMotionModel"
+    odom_frame_id: "odom"
+    base_frame_id: "base_footprint"
+    global_frame_id: "map"
+    tf_broadcast: true
+    set_initial_pose: true
+    initial_pose: 
+      x: 0.0
+      y: 0.0
+      yaw: 0.0
