@@ -1,27 +1,30 @@
-<sdf version="1.5">
-  <world name="mars_curiosity">
+<?xml version="1.0"?>
+<sdf version='1.8'>
+    <world name='mars_curiosity_world'>
+        <physics name='1ms' type='ignored'>
+            <max_step_size>0.003</max_step_size>
+            <real_time_factor>1</real_time_factor>
+            <real_time_update_rate>1000</real_time_update_rate>
+        </physics>
+        <plugin name='ignition::gazebo::systems::Physics' filename='ignition-gazebo-physics-system' />
+        <plugin name='ignition::gazebo::systems::UserCommands' filename='ignition-gazebo-user-commands-system' />
+        <plugin name='ignition::gazebo::systems::SceneBroadcaster' filename='ignition-gazebo-scene-broadcaster-system' />
+        <plugin name='ignition::gazebo::systems::Contact' filename='ignition-gazebo-contact-system' />
 
-    <!-- Martian Gravity-->
-    <gravity>0 0 -3.711</gravity>
 
-    <!-- Physics -->
-    <physics type='ode'>
-        <ode>
-            <solver>
-                <type>quick</type>
-            </solver>
-            <constraints> -->
-                <cfm>0.001</cfm>
-                <erp>0.02</erp>
-                <contact_max_correcting_vel>100.0</contact_max_correcting_vel>
-                <contact_surface_layer>0.001</contact_surface_layer>
-            </constraints>
-        </ode>
-    </physics>
+        <!-- Martian Gravity-->
+        <gravity>0 0 -3.711</gravity>
 
-    <include>
-        <uri>model://sun</uri>
-    </include>
+        <magnetic_field>6e-06 2.3e-05 -4.2e-05</magnetic_field>
+        <atmosphere type='adiabatic' />
+        <scene>
+            <ambient>0.4 0.4 0.4 1</ambient>
+            <background>0.7 0.7 0.7 1</background>
+            <shadows>1</shadows>
+        </scene>
+
+        <include> <uri>https://fuel.ignitionrobotics.org/1.0/OpenRobotics/models/Sun</uri> </include>
+        <include> <uri>https://fuel.ignitionrobotics.org/1.0/OpenRobotics/models/Ground Plane</uri> </include>
 
     <include>
         <uri>model://curiosity_path</uri>
@@ -29,5 +32,5 @@
         <pose>0 0 8.5 0 0 0</pose>
     </include>
 
-  </world>
+    </world>
 </sdf>

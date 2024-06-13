@@ -3,17 +3,14 @@ import os
 
 from ament_index_python.packages import get_package_share_directory
 
-from launch import LaunchDescription
-from launch.actions import DeclareLaunchArgument, ExecuteProcess, IncludeLaunchDescription
-from launch.actions import RegisterEventHandler
+from launch import LaunchDescription 
+from launch.actions import ExecuteProcess, IncludeLaunchDescription, RegisterEventHandler
 from launch.event_handlers import OnProcessExit
 from launch.launch_description_sources import PythonLaunchDescriptionSource
-from launch.substitutions import LaunchConfiguration, PathJoinSubstitution
-
+from launch.substitutions import LaunchConfiguration, PathJoinSubstitution 
 from launch_ros.actions import Node
 
 import xacro
-
 
 def generate_launch_description():
     ld = LaunchDescription()
@@ -78,31 +75,35 @@ def generate_launch_description():
     )
 
     # Bridge
-    bridge = Node(
-        package='ros_gz_bridge',
-        executable='parameter_bridge',
-        arguments=['/clock@rosgraph_msgs/msg/Clock[ignition.msgs.Clock'],
+    gz_ros2_bridge = Node(
+        package="ros_gz_bridge",
+        executable="parameter_bridge",
+        arguments=[
+            "/cmd_vel@geometry_msgs/msg/Twist@ignition.msgs.Twist",
+            "/clock@rosgraph_msgs/msg/Clock[ignition.msgs.Clock",
+            "/odometry/wheels@nav_msgs/msg/Odometry@ignition.msgs.Odometry",
+            "/tf@tf2_msgs/msg/TFMessage[ignition.msgs.Pose_V",
+            '/joint_states@sensor_msgs/msg/JointState[gz.msgs.Model',
+            '/scan@sensor_msgs/msg/LaserScan@gz.msgs.LaserScan',
+            '/image@sensor_msgs/msg/Image@gz.msgs.Image',
+            '/imu/data@sensor_msgs/msg/Imu@gz.msgs.IMU',
+        ],
         output='screen'
     )
-    ld.add_action(bridge)
+    ld.add_action(gz_ros2_bridge)
 
-    world = LaunchConfiguration('world')
-    world_arg = DeclareLaunchArgument(
-        'world',
-        default_value=PathJoinSubstitution([curio_gazebo_path, 'worlds', 'maze.world']),
-        description='World file to use in Gazebo')
+    world = os.path.join(curio_gazebo_path, "worlds", "maze.world")
 
     # Launch gazebo environment
     #    -v 4 is verbose, level 4 (most)
     #    -r is run simultion on start
     #    world is last arg
-    ld.add_action(IncludeLaunchDescription(
+    gzserver_cmd = IncludeLaunchDescription(
             PythonLaunchDescriptionSource(
-                PathJoinSubstitution([get_package_share_directory('ros_gz_sim'),
-                              'launch', 'gz_sim.launch.py'])),
-            launch_arguments=[('gz_args', [' -r -v 4 ', 
-                        PathJoinSubstitution([curio_gazebo_path, 'worlds', 'maze.world'])])],
-            ))
+                PathJoinSubstitution([get_package_share_directory('ros_gz_sim'), 'launch', 'gz_sim.launch.py'])),
+            launch_arguments={'gz_args': [' -r -v 4 ', world], 'on_exit_shutdown': 'true'}.items()
+            )
+    ld.add_action(gzserver_cmd)
 
     # start up ignition, then controllers...
     ld.add_action(RegisterEventHandler(
