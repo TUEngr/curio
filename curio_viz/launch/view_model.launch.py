@@ -21,6 +21,11 @@ def generate_launch_description():
         default_value=PathJoinSubstitution(
             [FindPackageShare('curio_description'),'urdf','curio.urdf'])))
 
+    rvizconfig = LaunchConfiguration('rvizconfig')
+    rvizconfig_arg = ld.add_action(DeclareLaunchArgument('rvizconfig',
+        default_value=PathJoinSubstitution(
+            [FindPackageShare('curio_viz'),'rviz','model.rviz'])))
+
     use_gui = LaunchConfiguration('use_gui')
     use_gui_arg = ld.add_action(DeclareLaunchArgument('use_gui',default_value="True"))
 
@@ -51,5 +56,14 @@ def generate_launch_description():
         name='joint_state_publisher_gui')
     ld.add_action(start_joint_state_publisher_cmd)
     ld.add_action(start_joint_state_publisher_gui_cmd)
+
+    rviz_cmd = Node(
+            package='rviz2',
+            namespace='',
+            executable='rviz2',
+            name='rviz2',
+            arguments=['-d',rvizconfig]
+        )
+    ld.add_action(rviz_cmd)
 
     return ld

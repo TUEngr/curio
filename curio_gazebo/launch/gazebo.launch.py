@@ -3,8 +3,9 @@ import os
 
 from ament_index_python.packages import get_package_share_directory
 
-from launch import LaunchDescription 
+from launch import LaunchDescription, LaunchIntrospector
 from launch.actions import ExecuteProcess, IncludeLaunchDescription, RegisterEventHandler
+from launch.actions import DeclareLaunchArgument
 from launch.event_handlers import OnProcessExit
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import LaunchConfiguration, PathJoinSubstitution 
@@ -28,16 +29,6 @@ def generate_launch_description():
     xacro.process_doc(doc)
     gz_params = {'robot_description': doc.toxml(), 'use_sim_time': use_sim_time}
 
-    ignition_spawn_entity = Node(
-        package='ros_gz_sim',
-        executable='create',
-        output='screen',
-        arguments=['-string', doc.toxml(),
-                   '-name', 'curio',
-                   '-z', '0.25',
-                   '-allow_renaming', 'true'],
-    )
-    ld.add_action(ignition_spawn_entity)
 
     # Start up robot_state_publisher
     node_robot_state_publisher = Node(
@@ -92,7 +83,12 @@ def generate_launch_description():
     )
     ld.add_action(gz_ros2_bridge)
 
-    world = os.path.join(curio_gazebo_path, "worlds", "maze.world")
+    #world = os.path.join(curio_gazebo_path, "worlds", "maze.world")
+    world = LaunchConfiguration('world')
+    ld.add_action(DeclareLaunchArgument('world',default_value=
+            PathJoinSubstitution([curio_gazebo_path, "worlds", "smaze.world"])))
+
+    #assert world.is_file(), "world file not found"
 
     # Launch gazebo environment
     #    -v 4 is verbose, level 4 (most)
@@ -105,6 +101,18 @@ def generate_launch_description():
             )
     ld.add_action(gzserver_cmd)
 
+    # Now that gazebo is started, add the robot model
+    ignition_spawn_entity = Node(
+        package='ros_gz_sim',
+        executable='create',
+        output='screen',
+        arguments=['-string', doc.toxml(),
+                   '-name', 'curio',
+                   '-z', '0.25',
+                   '-allow_renaming', 'true'],
+    )
+    ld.add_action(ignition_spawn_entity) 
+
     # start up ignition, then controllers...
     ld.add_action(RegisterEventHandler(
             event_handler=OnProcessExit(
@@ -114,5 +122,10 @@ def generate_launch_description():
                          load_servo_controller]
             )
     ))
+
+    # Verbose introspection of launch object
+    # print('Starting introspection of launch description...\n') 
+    # print(LaunchIntrospector().format_launch_description(ld))
+    # print('\nStarting launch of launch description...\n') 
 
     return ld

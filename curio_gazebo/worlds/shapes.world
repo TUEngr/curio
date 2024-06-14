@@ -21,8 +21,8 @@
             <shadows>1</shadows>
         </scene>
 
-        <include> <uri>https://fuel.ignitionrobotics.org/1.0/OpenRobotics/models/Sun</uri> </include>
-        <include> <uri>https://fuel.ignitionrobotics.org/1.0/OpenRobotics/models/Ground Plane</uri> </include>
+        <include> <uri>https://fuel.gazebosim.org/1.0/OpenRobotics/models/Sun</uri> </include>
+        <include> <uri>https://fuel.gazebosim.org/1.0/OpenRobotics/models/Ground Plane</uri> </include>
 
     <model name="box">
       <pose>5 0 0.5 0 0 0</pose>

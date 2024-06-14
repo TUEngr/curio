@@ -20,7 +20,7 @@ find_package(tf2_geometry_msgs REQUIRED)
 find_package(trajectory_msgs REQUIRED)
 
 install(
-  DIRECTORY launch worlds models config
+  DIRECTORY launch worlds config
   DESTINATION share/${PROJECT_NAME}
 )
 
