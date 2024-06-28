@@ -86,7 +86,7 @@ def generate_launch_description():
     #world = os.path.join(curio_gazebo_path, "worlds", "maze.world")
     world = LaunchConfiguration('world')
     ld.add_action(DeclareLaunchArgument('world',default_value=
-            PathJoinSubstitution([curio_gazebo_path, "worlds", "smaze.world"])))
+            PathJoinSubstitution([curio_gazebo_path, "worlds", "maze.world"])))
 
     #assert world.is_file(), "world file not found"
 
