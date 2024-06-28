@@ -24,6 +24,27 @@ def generate_launch_description():
     use_gui = LaunchConfiguration('use_gui')
     use_gui_arg = ld.add_action(DeclareLaunchArgument('use_gui',default_value="True"))
 
+    use_rviz = LaunchConfiguration('use_rviz')
+    use_rviz_arg = ld.add_action(DeclareLaunchArgument('use_rviz',
+        default_value='true',
+        description='Whether to start RVIZ'))
+
+    rviz_config_file = LaunchConfiguration('rviz_config_file')
+    rviz_config_file_cmd = ld.add_action(DeclareLaunchArgument('rviz_config_file',
+    default_value=PathJoinSubstitution(
+        [FindPackageShare('curio_viz'),'rviz','model.rviz']),
+    description='Full path to the RVIZ config file to use'))
+
+    # Launch RViz
+    rviz_cmd = ld.add_action(Node(
+    condition=IfCondition(use_rviz),
+    package='rviz2',
+    executable='rviz2',
+    name='rviz2',
+    output='screen',
+    arguments=['-d', rviz_config_file]))
+
+
     # Publish model of robot
     xacro_file = ParameterValue(Command(['xacro ', LaunchConfiguration('model')]), value_type=str)
     params = {"robot_description": xacro_file, "use_sim_time": True}
